@@ -1,0 +1,206 @@
+from env import Environment
+from rand import RandomSelect
+from round import RoundRobin
+from greedy import MyGreedy
+from Q import QLearning
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import MultipleLocator
+
+def AVG(service_num=100,mec_num=10,subcarrier_num=5):
+    """
+    生成服务数量-总能量消耗对比图
+    :param mec_num: mec数量
+    :param service_num: 服务数量
+    :param subcarrier_num: 子信道个数
+    """
+    e = Environment(service_num,mec_num,subcarrier_num)
+    plt.gca().xaxis.set_major_locator(MultipleLocator(10))
+    print("=======执行随机选择算法========")
+    x, y = RandomSelect(e).runForAVG()
+    print(x,y)
+    plt.plot(x[10:], y[10:], label='Random', marker='*')
+    e.reset()
+    print("=======执行轮询算法========")
+    x, y = RoundRobin(e).runForAVG()
+    print(x,y)
+    plt.plot(x[10:], y[10:], label='Round Robin', marker='x')
+    e.reset()
+    print("=======执行贪心算法========")
+    x, y = MyGreedy(e).runForAVG()
+    print(x, y)
+    plt.plot(x[10:], y[10:], label='Greedy', marker='+')
+    e.reset()
+    print("=======执行QLearning算法========")
+    q=QLearning(e)
+    q.runForAVG(1200)
+    x, y =q.playForAVG()
+    print(x, y)
+    plt.plot(x[10:], y[10:], label='QLearning',marker='3')
+    e.reset()
+    plt.xlabel("services num")
+    plt.ylabel("energy/bit")
+    # plt.title('Services-energy consumption/bit')
+    plt.legend()
+    plt.savefig("avg.jpg")
+    plt.show()
+def AVG_MEC(service_num=100,subcarrier_num=5):
+    px = []
+    py1 = []
+    py2 = []
+    py3 = []
+    py4 = []
+    for mec_num in range(10, 100, 10):
+        print('$MEC_NUM=', mec_num)
+        px.append(str(mec_num))
+        e = Environment(service_num, mec_num, subcarrier_num)
+        print("=======执行随机选择算法========")
+        x, y = RandomSelect(e).runForAVG()
+        print(x, y)
+        py1.append(y[-1])
+        e.reset()
+        print("=======执行轮询算法========")
+        x, y = RoundRobin(e).runForAVG()
+        print(x, y)
+        py2.append(y[-1])
+        e.reset()
+        print("=======执行贪心算法========")
+        x, y = MyGreedy(e).runForAVG()
+        print(x, y)
+        py3.append(y[-1])
+        e.reset()
+        print("=======执行QLearning算法========")
+        q = QLearning(e)
+        q.runForAVG(1500)
+        x, y = q.playForAVG()
+        print(x, y)
+        py4.append(y[-1])
+        e.reset()
+    plt.plot(px, py1, label='RandomSelect', marker='*')
+    plt.plot(px, py2, label='RoundRobin', marker='x')
+    plt.plot(px, py3, label='Greedy', marker='+')
+    plt.plot(px, py4, label='QLearning', marker='3')
+    # plt.title("Energy consumption/bit")
+    plt.xlabel("MEC num")
+    plt.ylabel("energy/bit")
+    plt.legend()
+    plt.savefig("avg_mec.jpg")
+    plt.show()
+def test(service_num=100,mec_num=20,subcarrier_num=10):
+    """
+    生成服务数量-总能量消耗对比图
+    :param mec_num: mec数量
+    :param service_num: 服务数量
+    :param subcarrier_num: 子信道个数
+    """
+    e = Environment(service_num,mec_num,subcarrier_num)
+    plt.gca().xaxis.set_major_locator(MultipleLocator(10))
+    print("=======执行随机选择算法========")
+    x, y = RandomSelect(e).run()
+    print(x,y)
+    plt.plot(x[10:], y[10:], label='Random', marker='*')
+    e.reset()
+    print("=======执行轮询算法========")
+    x, y = RoundRobin(e).run()
+    print(x,y)
+    plt.plot(x[10:], y[10:], label='Round Robin', marker='x')
+    e.reset()
+    print("=======执行贪心算法========")
+    x, y = MyGreedy(e).run()
+    print(x, y)
+    plt.plot(x[10:], y[10:], label='Greedy', marker='+')
+    e.reset()
+    print("=======执行QLearning算法========")
+    q=QLearning(e)
+    q.run(1500)
+    x, y =q.play()
+    print(x, y)
+    plt.plot(x[10:], y[10:], label='QLearning',marker='3')
+    e.reset()
+    plt.xlabel("services num")
+    plt.ylabel("all energy")
+    # plt.title('Services-ALL Energy Consumption')
+    plt.legend()
+    plt.savefig("test.jpg")
+    plt.show()
+def test_MEC(service_num=100,subcarrier_num=5):
+    px = []
+    py1 = []
+    py2 = []
+    py3 = []
+    py4 = []
+    for mec_num in range(10, 100, 10):
+        print('mec_num=', mec_num)
+        px.append(str(mec_num))
+        e = Environment(service_num, mec_num, subcarrier_num)
+        print("=======执行随机选择算法========")
+        x, y = RandomSelect(e).run()
+        print(x, y)
+        py1.append(y[-1])
+        e.reset()
+        print("=======执行轮询算法========")
+        x, y = RoundRobin(e).run()
+        print(x, y)
+        py2.append(y[-1])
+        e.reset()
+        print("=======执行贪心算法========")
+        x, y = MyGreedy(e).run()
+        print(x, y)
+        py3.append(y[-1])
+        e.reset()
+        print("=======执行QLearning算法========")
+        q = QLearning(e)
+        q.run(1500)
+        x, y = q.play()
+        print(x, y)
+        py4.append(y[-1])
+        e.reset()
+    f = open("TEST_MEC.txt", "a+")
+    f.writelines(px)
+    f.writelines(str(py1))
+    f.writelines(str(py2))
+    f.writelines(str(py3))
+    f.writelines(str(py4))
+    f.close()
+    plt.plot(px, py1, label='RandomSelect', marker='*')
+    plt.plot(px, py2, label='RoundRobin', marker='x')
+    plt.plot(px, py3, label='Greedy', marker='+')
+    plt.plot(px, py4, label='QLearning', marker='3')
+    # plt.title("Energy consumption")
+    plt.xlabel("mec num")
+    plt.ylabel("energy")
+    plt.legend()
+    plt.savefig("TEST_MEC.jpg")
+    plt.show()
+# def testForTime(service_num=100,mec_num=10,subcarrier_num=5):
+#     e = Environment(service_num,mec_num,subcarrier_num)
+#     plt.xlabel('algorithm')
+#     plt.ylabel('average time')
+#     px=['RandomSelect','RoundRobin','Greedy','QLearning']
+#     py=[]
+#     print("=======执行随机选择算法========")
+#     x, y = RandomSelect(e).runForTime()
+#     print(x,y)
+#     py.append(y[-1]/float(x[-1]))
+#     e.reset()
+#     print("=======执行轮询算法========")
+#     x, y = RoundRobin(e).runForTime()
+#     print(x,y)
+#     py.append(y[-1]/float(x[-1]))
+#     e.reset()
+#     print("=======执行贪心算法========")
+#     x, y = MyGreedy(e).runForTime()
+#     print(x, y)
+#     py.append(y[-1]/float(x[-1]))
+#     e.reset()
+#     print("=======执行QLearning算法========")
+#     q = QLearning(e)
+#     q.runForTime(1500)
+#     x, y = q.playForTime()
+#     print(x, y)
+#     py.append(y[-1]/float(x[-1]))
+#     e.reset()
+#     plt.bar(px,py)
+#     plt.savefig("time.jpg")
+#     plt.show()
+
+AVG_MEC()
