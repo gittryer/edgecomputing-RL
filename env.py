@@ -5,15 +5,22 @@ from typing import List, Dict
 
 'Service的数据配置'
 # 数据大小(单位:bit)
+<<<<<<< HEAD
 SERVICE_DATA_SIZE_RANGE = [1000, 2000]
 # 位置坐标范围(单位:m)
 SERVICE_LOCATION_RANGE = [0, 100]
+=======
+SERVICE_DATA_SIZE_RANGE = [1000, 1500]
+# 位置坐标范围(单位:m)
+SERVICE_LOCATION_RANGE = [0, 500]
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
 'Subcarrier的数据配置'
 # 1m的信道增益(单位:db)
 SUBCARRIER_go_RANGE = [1.42 * (10 ** -4), 1.42 * (10 ** -3)]
 # 信道增益系数
 SUBCARRIER_GO = 2.28
 # 加性高斯白噪声(单位:w)
+<<<<<<< HEAD
 SUBCARRIER_O = 1.0 * (10 ** (-6))
 # 信道带宽(单位:hz)
 SUBCARRIER_B = 1.0 * (10 ** 6)
@@ -27,6 +34,20 @@ MEC_CPI_RANGE = [1.0 * (10 ** 3), 5.0 * (10 ** 3)]
 # 时延约束(传播时延和运行时延,单位:s)
 ENV_TIME_LIMIT = [0.005, 0.005]
 
+=======
+SUBCARRIER_O = 1.0 * (10 ** (-13))
+# 信道带宽(单位:hz)
+SUBCARRIER_B = 1.2 * (10 ** 4)
+'MEC有关的数据配置'
+# CPU系数'
+MEC_K = 10 ** (-28)
+# 位置坐标范围(单位:m)
+MEC_LOCATION_RANGE = [0, 1000]
+# CPI(单位:cycles/bit)
+MEC_CPI_RANGE = [1.0 * (10 ** 3), 3.0 * (10 ** 3)]
+# 时延约束(传播时延和运行时延,单位:s)
+ENV_TIME_LIMIT = [0.003, 0.003]
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
 '''
 *********************************************
 @Copyright 小茜的魔法巧克力工厂 2021
@@ -86,7 +107,11 @@ class Service:
     @staticmethod
     def build(name='service.csv', cnt=100):
         """
+<<<<<<< HEAD
         生成csv数据集文件
+=======
+        随机生成csv数据集文件
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         :param name: 文件名称
         :param cnt: 循环次数
         """
@@ -105,13 +130,18 @@ class Service:
             f.close()
 
     @staticmethod
+<<<<<<< HEAD
     def read(count,name='service.csv'):
+=======
+    def read(count, name='service.csv'):
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         """
         从文件中读取服务
         :param name: 文件名
         :return: 返回读取完成的服务
         """
         ans = []
+<<<<<<< HEAD
         c=0
         with open(name) as f:
             reader = csv.reader(f)
@@ -120,6 +150,16 @@ class Service:
                     ls = rows
                     ans.append(Service(ls[0], int(ls[1]), int(ls[2]), int(ls[3])))
                     c+=1
+=======
+        c = 0
+        with open(name) as f:
+            reader = csv.reader(f)
+            for i, rows in enumerate(reader):
+                if c < count:
+                    ls = rows
+                    ans.append(Service(ls[0], int(ls[1]), int(ls[2]), int(ls[3])))
+                    c += 1
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
                 else:
                     return ans
             return ans
@@ -147,7 +187,11 @@ class SubCarrier:
         self.go = go
 
     @staticmethod
+<<<<<<< HEAD
     def build(name='subcarrier.csv', cnt=100):
+=======
+    def build(name='subcarrier.csv', cnt=5):
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         """
         生成csv数据集文件
         :param name: 文件名称
@@ -267,8 +311,14 @@ class Environment:
     """
     # 能量
     POWER = 0
+<<<<<<< HEAD
     # 单个MEC最大服务数量
     SINGLE_MEC_MAXSERVICE = 0
+=======
+
+    # 单个MEC最大服务数量
+    # SINGLE_MEC_MAXSERVICE = 0
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
 
     def __init__(self, service_num, mec_num, subcarrier_num):
         """
@@ -277,20 +327,34 @@ class Environment:
         :param subcarrier_num: 子信道的数量
         :param mec_num: mec的数量
         """
+<<<<<<< HEAD
         self.service_num = service_num
         self.subcarrier_num = subcarrier_num
         self.mec_num = mec_num
+=======
+        "================================="
+        # 初始化服务，子信道，服务器数量
+        self.service_num = service_num
+        self.subcarrier_num = subcarrier_num
+        self.mec_num = mec_num
+        "================================="
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         # 服务集
         self.services = Service.read(count=self.service_num)
         # 子信道集
         self.subcarriers = SubCarrier.read(count=self.subcarrier_num)
         # mec集
         self.mecs = MEC.read(count=self.mec_num)
+<<<<<<< HEAD
+=======
+        "================================="
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         # MEC分配集(长度:1*service_num,范围:[0,mec_num])
         self.u = np.full((1, self.service_num), -1, dtype=np.int32)[0]
         # 信道分配集(长度:1*service_num,范围:[0,subcarrier_num])
         self.w = np.full((1, self.service_num), -1, dtype=np.int32)[0]
 
+<<<<<<< HEAD
     def reset(self):
         """
         重置环境
@@ -299,6 +363,10 @@ class Environment:
         self = self.__init__(self.service_num, self.mec_num, self.subcarrier_num)
         Environment.POWER = 0
         return 0
+=======
+        self.states = self.service_num
+        self.actions = self.subcarrier_num * self.mec_num
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
 
     def add(self, service_index, mec_index, subcarrier_index, P, K):
         """
@@ -314,8 +382,19 @@ class Environment:
         self.w[service_index] = subcarrier_index
         self.services[service_index].setP(P)
         self.mecs[mec_index].setK(K)
+<<<<<<< HEAD
         if sum(self.getTime(service_index, mec_index, subcarrier_index)) < sum(ENV_TIME_LIMIT):
             Environment.POWER += self.getPower(service_index, mec_index, subcarrier_index)
+=======
+        # # 是否满足时延标准
+        # t=self.getTime(service_index, mec_index, subcarrier_index)
+        # print("$time=%.6f,%.6f" %(t[0],t[1]))
+        p=self.getPower(service_index, mec_index, subcarrier_index)
+        print("$energy=%.6f,%.6f"%(p[0],p[1]))
+        if sum(self.getTime(service_index, mec_index)) < sum(ENV_TIME_LIMIT):
+            Environment.POWER += \
+                sum(self.getPower(service_index, mec_index, subcarrier_index))
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
             return True
         else:
             self.u[service_index] = -1
@@ -324,6 +403,7 @@ class Environment:
             self.mecs[mec_index].setK(None)
             return False
 
+<<<<<<< HEAD
     def forward(self,service_index, mec_index, subcarrier_index, P, K):
         self.u[service_index] = mec_index
         self.w[service_index] = subcarrier_index
@@ -333,6 +413,9 @@ class Environment:
         return -Environment.POWER,service_index+1==self.service_num
 
     def getTime(self, service_index, mec_index, subcarrier_index):
+=======
+    def getTime(self, service_index, mec_index):
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         """
         获取某个服务的运行时间
         :param service_index:服务编号
@@ -350,6 +433,7 @@ class Environment:
         K = self.mecs[mec_index].K
         # MEC运行时延
         T_mec = (D * CPI) / K
+<<<<<<< HEAD
         distance = (self.mecs[mec_index].location_x - self.services[service_index].location_x) ** 2 + (
                 self.mecs[mec_index].location_y - self.services[service_index].location_y) ** 2
         if distance==0:
@@ -359,6 +443,18 @@ class Environment:
         P = self.services[service_index].P
         # MEC传输时延
         T_trans = D / (SUBCARRIER_B *(math.log(1 + (G * P) / (SUBCARRIER_O ** 2),2)))
+=======
+
+        distance = (self.mecs[mec_index].location_x - self.services[service_index].location_x) ** 2 + (
+                self.mecs[mec_index].location_y - self.services[service_index].location_y) ** 2
+        s=0
+        for i in range(self.subcarrier_num):
+            G = (SUBCARRIER_GO * self.subcarriers[i].go) / distance
+            # 传输功率
+            P = self.services[service_index].P
+            s+= math.log2(1 + (G * P) / SUBCARRIER_O)
+        T_trans=D/(s*SUBCARRIER_B)
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
         return T_mec, T_trans
 
     def getPower(self, service_index, mec_index, subcarrier_index):
@@ -371,5 +467,79 @@ class Environment:
         """
         E_mec = MEC_K * (self.mecs[mec_index].K ** 2) * self.services[service_index].data_size * self.mecs[
             mec_index].cpi
+<<<<<<< HEAD
         E_trans = self.getTime(service_index, mec_index, subcarrier_index)[1] * self.services[service_index].P
         return E_mec + E_trans
+=======
+        E_trans = self.getTime(service_index, mec_index)[1] * self.services[service_index].P
+        return E_mec, E_trans
+
+    def reset(self):
+        """
+        重置环境
+        :return:
+        """
+        self = self.__init__(self.service_num, self.mec_num, self.subcarrier_num)
+        Environment.POWER = 0
+        return 0
+
+    def getK(self, service_index, mec_index) -> float:
+        """
+        分配MEC频率
+        :param service_index: 服务索引
+        :param mec_index:  mec的索引
+        :return: 返回频率
+        """
+        D = self.services[service_index].data_size
+        C = self.mecs[mec_index].cpi
+        L = ENV_TIME_LIMIT[0]
+        return (D * C) / L
+
+    def getP(self, service_index, mec_index, subcarrier_index) -> float:
+        """
+        分配传输功率
+        :param service_index: 服务编号
+        :param mec_index: mec编号
+        :param subcarrier_index: 子信道编号
+        :return: 返回传输功率
+        """
+        D = self.services[service_index].data_size
+        L = ENV_TIME_LIMIT[1]
+        distance = (self.mecs[mec_index].location_x - self.services[service_index].location_x) ** 2 + (
+                 self.mecs[mec_index].location_y - self.services[service_index].location_y) ** 2
+        # print(self.services[service_index].data_size,distance)
+        UP = (2 ** (D / (L * SUBCARRIER_B)) - 1) * (SUBCARRIER_O ** 2)
+        DOWN = (SUBCARRIER_GO * self.subcarriers[subcarrier_index].go) / distance
+        # print((SUBCARRIER_GO * self.subcarriers[subcarrier_index].go))
+        # print('up=',UP,'down=%.12f'%DOWN)
+        return UP / DOWN
+
+    # L=-F(x)
+    def forward(self, service_index, mec_index, subcarrier_index, P, K):
+        """
+        计算结果
+        :param service_index:
+        :param mec_index:
+        :param subcarrier_index:
+        :param P: 传输功率
+        :param K: MEC频率
+        :return:
+        """
+        self.u[service_index] = mec_index
+        self.w[service_index] = subcarrier_index
+        self.services[service_index].setP(P)
+        self.mecs[mec_index].setK(K)
+        val = sum(self.getPower(service_index, mec_index, subcarrier_index))
+        Environment.POWER += val
+        return val, service_index + 1 == self.service_num
+
+def build():
+    """
+    生成随机数据集
+    """
+    print('init dataset...')
+    Service.build()
+    SubCarrier.build()
+    MEC.build()
+    print('over')
+>>>>>>> 90a41b2 (修改了一些参数的设定值)
